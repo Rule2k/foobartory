@@ -86,8 +86,6 @@ const Foobartory = () => {
         break;
       case Job.Foobar:
         if (numberOfBar >= 1 && numberOfFoo >= 1) {
-          console.log("heh");
-          console.log({ numberOfFoo, numberOfBar });
           const random = getRandomNumber(1, 100);
           if (random <= 60) {
             handleSimpleActions(job, id);

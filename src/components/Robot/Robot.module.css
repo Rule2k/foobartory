@@ -1,5 +1,19 @@
+.Robot {
+  position: relative;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  width: 8rem;
+}
+
+.CurrentJob {
+  font-weight: bold;
+}
+
 .Robotsvg {
   height: 2rem;
+  cursor: pointer;
+  margin-bottom: 1rem;
 }
 
 .Busy {
@@ -12,4 +26,23 @@
 
 .Idle {
   fill: red;
+}
+
+.Popup {
+  position: absolute;
+  background-color: white;
+  padding: 1rem;
+  width: 100%;
+  border: 1px solid black;
+  border-radius: 0.2rem;
+  top: 3rem;
+  z-index: 2;
+}
+
+.Job {
+  cursor: pointer;
+}
+
+.Active {
+  font-weight: bold;
 }

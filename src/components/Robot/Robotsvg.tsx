@@ -1,7 +1,12 @@
 import React from "react";
 
-const Robotsvg = (props: any) => (
-  <svg viewBox="0 0 462 462" enableBackground="new 0 0 462 462" {...props}>
+const Robotsvg = React.forwardRef((props: any, ref: any) => (
+  <svg
+    viewBox="0 0 462 462"
+    enableBackground="new 0 0 462 462"
+    {...props}
+    ref={ref}
+  >
     <g>
       <path d="m167,142c4.142,0 7.5-3.358 7.5-7.5v-8c0-4.142-3.358-7.5-7.5-7.5s-7.5,3.358-7.5,7.5v8c0,4.142 3.357,7.5 7.5,7.5z" />
       <path d="m295,142c4.142,0 7.5-3.358 7.5-7.5v-8c0-4.142-3.358-7.5-7.5-7.5s-7.5,3.358-7.5,7.5v8c0,4.142 3.357,7.5 7.5,7.5z" />
@@ -11,6 +16,6 @@ const Robotsvg = (props: any) => (
       <path d="m287,271c-4.142,0-7.5,3.358-7.5,7.5v32c0,4.142 3.358,7.5 7.5,7.5s7.5-3.358 7.5-7.5v-32c0-4.142-3.358-7.5-7.5-7.5z" />
     </g>
   </svg>
-);
+));
 
 export default Robotsvg;
