@@ -101,15 +101,31 @@ const Foobartory = () => {
     }
   };
 
+  const handleSwitchAction = (id: number, job: Job) => {
+    delay(getDelay(Job.Switching)).then(() =>
+      setRobotList((currentRobotList) =>
+        currentRobotList.map((robot) =>
+          robot.id === id ? { ...robot, loading: true, job } : robot
+        )
+      )
+    );
+  };
+
   return (
     <div>
       {robotList.map((robot) => (
         <Robot
           {...robot}
           handleRobotAction={handleRobotAction}
+          handleSwitchAction={handleSwitchAction}
           key={robot.id}
         />
       ))}
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
       <Summary
         numberOfFoo={numberOfFoo}
         numberOfBar={numberOfBar}

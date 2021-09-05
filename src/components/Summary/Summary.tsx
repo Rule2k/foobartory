@@ -15,10 +15,10 @@ const Summary = ({
 }: Props) => {
   return (
     <div>
-      <span>Number of Foo : {numberOfFoo}</span>
-      <span>Number of Bar : {numberOfBar}</span>
-      <span>Number of Foobar : {numberOfFoobar}</span>
-      <span>Number of Robot : {numberOfRobot}</span>
+      <div>Number of Foo : {numberOfFoo}</div>
+      <div>Number of Bar : {numberOfBar}</div>
+      <div>Number of Foobar : {numberOfFoobar}</div>
+      <div>Number of Robot : {numberOfRobot}</div>
     </div>
   );
 };
