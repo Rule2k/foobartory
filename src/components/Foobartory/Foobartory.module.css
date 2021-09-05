@@ -5,6 +5,9 @@
   align-items: center;
   width: 60rem;
   margin: auto;
+  background-color: white;
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
 }
 
 .Robots {
@@ -21,4 +24,11 @@
 
 .Foobartory > button {
   margin-bottom: 2rem;
+}
+
+.Title {
+  font-weight: bold;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: red;
 }

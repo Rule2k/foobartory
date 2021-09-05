@@ -1,6 +1,15 @@
 .Summary {
   display: flex;
   flex-direction: row;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 2rem;
+  background-color: red;
+  color: white;
+}
+
+.Summary > div > span {
+  font-weight: bold;
 }
 
 .Summary > div:not(:last-child) {

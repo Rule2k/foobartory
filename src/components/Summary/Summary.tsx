@@ -16,10 +16,18 @@ const Summary = ({
   return (
     <>
       <div className={styles.Summary}>
-        <div>Foo : {numberOfFoo}</div>
-        <div>Bar : {numberOfBar}</div>
-        <div>Foobar : {numberOfFoobar}</div>
-        <div>Robot : {numberOfRobot}</div>
+        <div>
+          Foo : <span>{numberOfFoo}</span>
+        </div>
+        <div>
+          Bar : <span>{numberOfBar}</span>
+        </div>
+        <div>
+          Foobar : <span>{numberOfFoobar}</span>
+        </div>
+        <div>
+          Robot : <span>{numberOfRobot}</span>
+        </div>
       </div>
       <div>
         <div className={styles.Rules}>

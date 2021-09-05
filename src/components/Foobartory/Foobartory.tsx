@@ -137,6 +137,7 @@ const Foobartory = () => {
 
   return (
     <div className={styles.Foobartory}>
+      <div className={styles.Title}>Foobartory</div>
       <div className={styles.Robots}>
         {robotList.map((robot) => (
           <Robot
