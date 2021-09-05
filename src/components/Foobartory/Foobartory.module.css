@@ -1,0 +1,15 @@
+.Foobartory {
+  display: flex;
+  flex-direction: column;
+  padding: 5rem;
+  align-items: center;
+}
+
+.Robots {
+  display: flex;
+  flex-direction: row;
+}
+
+.Robots > div:not(:last-child) {
+  margin-right: 2rem;
+}

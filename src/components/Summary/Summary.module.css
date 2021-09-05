@@ -1,0 +1,12 @@
+.Summary {
+  display: flex;
+  flex-direction: row;
+}
+
+.Summary > div:not(:last-child) {
+  margin-right: 1rem;
+}
+
+.Rules > span {
+  font-weight: bold;
+}

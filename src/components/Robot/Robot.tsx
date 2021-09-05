@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 import { Job, RobotInterface } from "../Foobartory/Foobartory";
-
+import Robotsvg from "./Robotsvg";
+import styles from "./Robot.module.css";
+import cx from "classnames";
 interface Props extends RobotInterface {
   handleRobotAction: (id: number, job: Job) => void;
   handleSwitchAction: (id: number, job: Job) => void;
@@ -9,14 +11,13 @@ interface Props extends RobotInterface {
 const Robot = ({
   job,
   id,
-  loading,
   delay,
   handleRobotAction,
   handleSwitchAction,
 }: Props) => {
   useEffect(() => {
     const interval = setInterval(() => {
-      job !== Job.Idle && handleRobotAction(id, job);
+      delay > 0 && handleRobotAction(id, job);
     }, delay);
 
     return () => clearInterval(interval);
@@ -24,12 +25,16 @@ const Robot = ({
 
   const jobs = Object.values(Job);
 
+  const robotClasses = cx(styles.Robotsvg, {
+    [styles.Busy]: job !== Job.Idle && job !== Job.Switching,
+    [styles.Switching]: job === Job.Switching,
+    [styles.Idle]: job === Job.Idle,
+  });
+
   return (
     <div>
-      <div>Robot</div>
-      <div>
-        {job === Job.Switching ? "Switching jobs " : `Current job : ${job}`}
-      </div>
+      <Robotsvg className={robotClasses} />
+      <div>{`Current job : ${job}`}</div>
       {jobs.map((job) => (
         <div key={job} onClick={() => handleSwitchAction(id, job)}>
           {job}

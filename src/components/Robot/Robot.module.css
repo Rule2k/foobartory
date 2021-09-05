@@ -1,0 +1,15 @@
+.Robotsvg {
+  height: 2rem;
+}
+
+.Busy {
+  fill: green;
+}
+
+.Switching {
+  fill: orange;
+}
+
+.Idle {
+  fill: red;
+}

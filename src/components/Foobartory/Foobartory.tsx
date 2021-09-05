@@ -1,18 +1,18 @@
 import React, { useState } from "react";
 import Robot from "../Robot";
 import Summary from "../Summary";
+import styles from "./Foobartory.module.css";
+
 export enum Job {
   Foo = "Collecting foo",
   Bar = "Collecting bar",
   Foobar = "Building foobar",
-  Robot = "Building robot",
   Switching = "Switching jobs",
   Idle = "Idle",
 }
 export interface RobotInterface {
   id: number;
   job: Job;
-  loading: boolean;
   delay: number;
 }
 
@@ -35,29 +35,25 @@ const Foobartory = () => {
       case Job.Switching:
         return 5000;
 
-      case Job.Robot:
-        return 0;
-
       case Job.Idle:
         return 0;
     }
   };
 
   const startingRobotList = [
-    { id: 1, job: Job.Idle, loading: false, delay: getDelay(Job.Idle) },
-    { id: 2, job: Job.Idle, loading: false, delay: getDelay(Job.Idle) },
+    { id: 1, job: Job.Idle, delay: getDelay(Job.Idle) },
+    { id: 2, job: Job.Idle, delay: getDelay(Job.Idle) },
   ];
   const [robotList, setRobotList] =
     useState<ReadonlyArray<RobotInterface>>(startingRobotList);
   const [numberOfFoo, setNumberOfFoo] = useState<number>(0);
   const [numberOfBar, setNumberOfBar] = useState<number>(0);
   const [numberOfFoobar, setNumberOfFoobar] = useState<number>(0);
-
   const delay = (ms: number) => {
     return new Promise((resolve) => setTimeout(resolve, ms));
   };
 
-  const getAction = (job: Job) => {
+  const getSimplesActions = (job: Job) => {
     switch (job) {
       case Job.Foo:
         return setNumberOfFoo;
@@ -68,36 +64,55 @@ const Foobartory = () => {
     }
   };
 
+  const handleSimpleActions = (job: Job, id: number) => {
+    const action = getSimplesActions(job);
+    delay(getDelay(job)).then(
+      () => action && action((number: number) => number + 1)
+    );
+    setRobotList((currentRobotList) =>
+      currentRobotList.map((robot) =>
+        robot.id === id ? { ...robot, job, delay: getDelay(job) } : robot
+      )
+    );
+  };
+
   const handleRobotAction = (id: number, job: Job) => {
-    if (job === Job.Idle || job === Job.Switching) {
-      console.log("TODO");
-    } else if (job === Job.Robot) {
-      numberOfFoobar >= 3 &&
-        numberOfFoo >= 6 &&
-        setRobotList((currentRobotList) => [
-          ...currentRobotList,
-          {
-            id: currentRobotList.length + 1,
-            job: Job.Idle,
-            loading: false,
-            delay: getDelay(Job.Idle),
-          },
-        ]);
-    } else {
-      const action = getAction(job);
-      setRobotList((currentRobotList) =>
-        currentRobotList.map((robot) =>
-          robot.id === id ? { ...robot, loading: true, job } : robot
-        )
-      );
-      delay(getDelay(Job.Foo)).then(
-        () => action && action((number: number) => number + 1)
-      );
-      setRobotList((currentRobotList) =>
-        currentRobotList.map((robot) =>
-          robot.id === id ? { ...robot, loading: true, job } : robot
-        )
-      );
+    switch (job) {
+      case Job.Bar:
+        handleSimpleActions(job, id);
+        break;
+      case Job.Foo:
+        handleSimpleActions(job, id);
+        break;
+      case Job.Foobar:
+        if (numberOfBar >= 1 && numberOfFoo >= 1) {
+          console.log("heh");
+          console.log({ numberOfFoo, numberOfBar });
+          const random = getRandomNumber(1, 100);
+          if (random <= 60) {
+            handleSimpleActions(job, id);
+            setNumberOfBar((currentNumberofBar) => currentNumberofBar - 1);
+            setNumberOfFoo((currentNumberOfFoo) => currentNumberOfFoo - 1);
+          } else {
+            setNumberOfFoo((currentNumberOfFoo) => currentNumberOfFoo - 1);
+          }
+        }
+        break;
+    }
+  };
+
+  const handleCreateNewRobot = () => {
+    if (numberOfFoobar >= 3 && numberOfFoo >= 6) {
+      setRobotList((currentRobotList) => [
+        ...currentRobotList,
+        {
+          id: currentRobotList.length + 1,
+          job: Job.Idle,
+          delay: getDelay(Job.Idle),
+        },
+      ]);
+      setNumberOfFoobar((currentNumberOfFoobar) => currentNumberOfFoobar - 3);
+      setNumberOfFoo((currentNumberOfFoo) => currentNumberOfFoo - 6);
     }
   };
 
@@ -105,34 +120,41 @@ const Foobartory = () => {
     setRobotList((currentRobotList) =>
       currentRobotList.map((robot) =>
         robot.id === id
-          ? { ...robot, loading: true, job: Job.Switching }
+          ? {
+              ...robot,
+              job: Job.Switching,
+              delay: getDelay(Job.Switching),
+            }
           : robot
       )
     );
     delay(getDelay(Job.Switching)).then(() =>
       setRobotList((currentRobotList) =>
         currentRobotList.map((robot) =>
-          robot.id === id ? { ...robot, loading: true, job } : robot
+          robot.id === id ? { ...robot, job, delay: getDelay(job) } : robot
         )
       )
     );
   };
 
   return (
-    <div>
-      {robotList.map((robot) => (
-        <Robot
-          {...robot}
-          handleRobotAction={handleRobotAction}
-          handleSwitchAction={handleSwitchAction}
-          key={robot.id}
-        />
-      ))}
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
+    <div className={styles.Foobartory}>
+      <div className={styles.Robots}>
+        {robotList.map((robot) => (
+          <Robot
+            {...robot}
+            handleRobotAction={handleRobotAction}
+            handleSwitchAction={handleSwitchAction}
+            key={robot.id}
+          />
+        ))}
+      </div>
+      <button
+        onClick={handleCreateNewRobot}
+        disabled={numberOfFoobar < 3 || numberOfFoo < 6}
+      >
+        Create a new robot
+      </button>
       <Summary
         numberOfFoo={numberOfFoo}
         numberOfBar={numberOfBar}
