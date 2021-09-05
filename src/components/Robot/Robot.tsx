@@ -23,12 +23,13 @@ const Robot = ({
   }, [job]);
 
   const jobs = Object.values(Job);
-  console.log({ jobs });
 
   return (
     <div>
       <div>Robot</div>
-      <div>Current job : {job}</div>
+      <div>
+        {job === Job.Switching ? "Switching jobs " : `Current job : ${job}`}
+      </div>
       {jobs.map((job) => (
         <div key={job} onClick={() => handleSwitchAction(id, job)}>
           {job}

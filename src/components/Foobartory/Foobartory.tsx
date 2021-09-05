@@ -102,6 +102,13 @@ const Foobartory = () => {
   };
 
   const handleSwitchAction = (id: number, job: Job) => {
+    setRobotList((currentRobotList) =>
+      currentRobotList.map((robot) =>
+        robot.id === id
+          ? { ...robot, loading: true, job: Job.Switching }
+          : robot
+      )
+    );
     delay(getDelay(Job.Switching)).then(() =>
       setRobotList((currentRobotList) =>
         currentRobotList.map((robot) =>
