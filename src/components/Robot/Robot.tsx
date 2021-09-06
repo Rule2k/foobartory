@@ -53,7 +53,7 @@ const Robot = ({
     }
   }, [delay]);
 
-  const jobs = Object.values(Job);
+  const jobs = Object.values(Job).filter((value) => value !== Job.Switching);
 
   const robotClasses = cx(styles.Robotsvg, {
     [styles.Busy]: job !== Job.Idle && job !== Job.Switching,
