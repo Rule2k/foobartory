@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { delay, getRandomNumber } from "../../utils/utils";
 import Robot from "../Robot";
 import Summary from "../Summary";
 import styles from "./Foobartory.module.css";
@@ -16,11 +17,13 @@ export interface RobotInterface {
   delay: number;
 }
 
-const Foobartory = () => {
-  const getRandomNumber = (min: number, max: number) => {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  };
+export interface SummaryInterface {
+  foo: number;
+  bar: number;
+  foobar: number;
+}
 
+const Foobartory = () => {
   const getDelay = (job: Job) => {
     switch (job) {
       case Job.Foo:
@@ -44,63 +47,86 @@ const Foobartory = () => {
     { id: 1, job: Job.Idle, delay: getDelay(Job.Idle) },
     { id: 2, job: Job.Idle, delay: getDelay(Job.Idle) },
   ];
+  const startingSummary = {
+    foo: 0,
+    bar: 0,
+    foobar: 0,
+  };
+
   const [robotList, setRobotList] =
     useState<ReadonlyArray<RobotInterface>>(startingRobotList);
-  const [numberOfFoo, setNumberOfFoo] = useState<number>(0);
-  const [numberOfBar, setNumberOfBar] = useState<number>(0);
-  const [numberOfFoobar, setNumberOfFoobar] = useState<number>(0);
-  const delay = (ms: number) => {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  };
-
-  const getSimplesActions = (job: Job) => {
-    switch (job) {
-      case Job.Foo:
-        return setNumberOfFoo;
-      case Job.Bar:
-        return setNumberOfBar;
-      case Job.Foobar:
-        return setNumberOfFoobar;
-    }
-  };
-
-  const handleSimpleActions = (job: Job, id: number) => {
-    const action = getSimplesActions(job);
-    delay(getDelay(job)).then(
-      () => action && action((number: number) => number + 1)
-    );
-    setRobotList((currentRobotList) =>
-      currentRobotList.map((robot) =>
-        robot.id === id ? { ...robot, job, delay: getDelay(job) } : robot
-      )
-    );
-  };
+  const [summaryList, setSummaryList] =
+    useState<SummaryInterface>(startingSummary);
+  const { foo, bar, foobar } = summaryList;
 
   const handleRobotAction = (id: number, job: Job) => {
     switch (job) {
       case Job.Bar:
-        handleSimpleActions(job, id);
+        delay(getDelay(job)).then(() =>
+          setSummaryList((summary) => ({
+            ...summary,
+            bar: summary.bar + 1,
+          }))
+        );
+        // we need to reset the delay with a new value for the collectingBar action,
+        // otherwise the value will never get updated since the useEffect of Robot will always use the initial value
+        setRobotList((currentRobotList) =>
+          currentRobotList.map((robot) =>
+            robot.id === id
+              ? {
+                  ...robot,
+                  delay: getDelay(job),
+                }
+              : robot
+          )
+        );
         break;
       case Job.Foo:
-        handleSimpleActions(job, id);
+        delay(getDelay(job)).then(() =>
+          setSummaryList((summary) => ({
+            ...summary,
+            foo: summary.foo + 1,
+          }))
+        );
         break;
       case Job.Foobar:
-        if (numberOfBar >= 1 && numberOfFoo >= 1) {
-          const random = getRandomNumber(1, 100);
-          if (random <= 60) {
-            handleSimpleActions(job, id);
-            setNumberOfBar((currentNumberofBar) => currentNumberofBar - 1);
-            setNumberOfFoo((currentNumberOfFoo) => currentNumberOfFoo - 1);
-          } else {
-            setNumberOfFoo((currentNumberOfFoo) => currentNumberOfFoo - 1);
-          }
+        const random = getRandomNumber(1, 100);
+        if (random <= 60) {
+          delay(getDelay(job)).then(() =>
+            setSummaryList((summary) => {
+              if (summary.foo >= 1 && summary.bar >= 1) {
+                return {
+                  foo: summary.foo - 1,
+                  bar: summary.bar - 1,
+                  foobar: summary.foobar + 1,
+                };
+              } else {
+                return {
+                  ...summary,
+                };
+              }
+            })
+          );
+        } else {
+          setSummaryList((summary) => {
+            if (summary.foo >= 1 && summary.bar >= 1) {
+              return {
+                ...summary,
+                foo: summary.foo - 1,
+              };
+            } else {
+              return {
+                ...summary,
+              };
+            }
+          });
         }
         break;
     }
   };
 
   const handleCreateNewRobot = () => {
-    if (numberOfFoobar >= 3 && numberOfFoo >= 6) {
+    if (foobar >= 3 && foo >= 6) {
       setRobotList((currentRobotList) => [
         ...currentRobotList,
         {
@@ -109,8 +135,11 @@ const Foobartory = () => {
           delay: getDelay(Job.Idle),
         },
       ]);
-      setNumberOfFoobar((currentNumberOfFoobar) => currentNumberOfFoobar - 3);
-      setNumberOfFoo((currentNumberOfFoo) => currentNumberOfFoo - 6);
+      setSummaryList((summary) => ({
+        ...summary,
+        foobar: summary.foobar - 3,
+        foo: summary.foo - 6,
+      }));
     }
   };
 
@@ -148,16 +177,13 @@ const Foobartory = () => {
           />
         ))}
       </div>
-      <button
-        onClick={handleCreateNewRobot}
-        disabled={numberOfFoobar < 3 || numberOfFoo < 6}
-      >
+      <button onClick={handleCreateNewRobot} disabled={foobar < 3 || foo < 6}>
         Create a new robot
       </button>
       <Summary
-        numberOfFoo={numberOfFoo}
-        numberOfBar={numberOfBar}
-        numberOfFoobar={numberOfFoobar}
+        numberOfFoo={foo}
+        numberOfBar={bar}
+        numberOfFoobar={foobar}
         numberOfRobot={robotList.length}
       />
     </div>

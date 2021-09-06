@@ -42,12 +42,16 @@ const Robot = ({
   });
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      delay > 0 && handleRobotAction(id, job);
-    }, delay);
+    const interval =
+      delay > 0 &&
+      setInterval(() => {
+        handleRobotAction(id, job);
+      }, delay);
 
-    return () => clearInterval(interval);
-  }, [job]);
+    if (interval) {
+      return () => clearInterval(interval);
+    }
+  }, [delay]);
 
   const jobs = Object.values(Job);
 
